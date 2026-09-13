@@ -1,8 +1,8 @@
 # Open-source preparation status
 
-Updated 2026-09-13. Source publication and downloadable releases are separate milestones. The repository remains private until the owner explicitly authorizes visibility changes.
+Updated 2026-09-13. Source publication and downloadable releases are separate milestones. The owner authorized source publication on 2026-09-13. The clean repository is public; the old repository remains private.
 
-## Implemented locally, pending delivery / CI run
+## Delivered
 
 - English README and Chinese counterpart with four-provider onboarding and current global monitoring behavior.
 - Cache/history/preferences/WebKit data handling, diagnostic redaction and account-switch limits.
@@ -16,7 +16,7 @@ Updated 2026-09-13. Source publication and downloadable releases are separate mi
 - MIT selected; LICENSE added with Derek Tan as copyright holder.
 - Owner states sounds and icon/reference imagery were generated with ChatGPT; recorded in ASSET_PROVENANCE.md.
 - Owner requires sanitization. Current personal Cursor examples replaced with synthetic fixtures; owner selected a separate clean initial commit, preserving the old private repository.
-- GitHub Private Vulnerability Reporting selected; enabling requires the public repository. SECURITY.md states the pending status.
+- GitHub Private Vulnerability Reporting enabled and verified after publication.
 
 ## Verified locally
 
@@ -27,10 +27,10 @@ Updated 2026-09-13. Source publication and downloadable releases are separate mi
 
 ## Remaining acceptance / publication work
 
-- Run CI on GitHub after delivery and resolve failures; local checks alone are insufficient.
-- Verify the private-reporting route before linking it as available.
+- GitHub CI passed for the screenshot-inclusive source at fcda008 (run 34787660871): tests, build, bundle validation and secret scanning.
+- Private-reporting API readback confirmed enabled.
 - Complete provider sign-out / data-removal acceptance; current limitation is documented.
-- Owner explicitly approves making source public after unresolved decisions are handled.
+- Source published under MIT with owner approval; only clean commits use the GitHub noreply identity.
 - Optional binary release: Developer ID credentials, notarization, supported architectures and independent clean-Mac installation. No signed-download promise yet.
 
 The older [readiness review](open-source-readiness.md) is a dated audit snapshot; this list tracks subsequent preparation.
