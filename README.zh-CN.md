@@ -8,6 +8,15 @@ macOS 菜单栏和桌面悬浮窗，集中显示 **Codex、Cursor、Claude、Gem
 
 本项目独立开发，与各提供商无隶属或背书关系。显示的是额度百分比，**不是剩余 token 数量**；可用指标取决于账号和实际返回数据。
 
+## 界面展示
+
+<p>
+  <img src="docs/screenshots/overview-zh.png" width="360" alt="四家平台额度总览">
+  <img src="docs/screenshots/trend-zh.png" width="360" alt="展开历史预测趋势与折叠卡片">
+</p>
+
+使用 App 的 SwiftUI 界面代码和合成演示数据渲染。为保持展示一致，背景使用固定渐变；运行中的 App 使用 macOS 实时毛玻璃。
+
 ## 从源码构建
 
 要求 macOS 13+、Swift 5.9+ 工具链（Xcode 命令行工具）。目前本机验证为 Apple Silicon；Intel 和最低 macOS 版本尚未验证。

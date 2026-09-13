@@ -8,6 +8,15 @@ A macOS menu bar and floating dashboard for **Codex, Cursor, Claude, and Gemini 
 
 This is an independent project, not affiliated with or endorsed by the providers. Quotas are percentages, **not a count of remaining tokens**. Provider support depends on the account and data returned.
 
+## Screenshots
+
+<p>
+  <img src="docs/screenshots/overview-en.png" width="360" alt="Four-provider quota overview">
+  <img src="docs/screenshots/trend-en.png" width="360" alt="Expanded usage trend with forecast and collapsed cards">
+</p>
+
+Rendered from the app’s SwiftUI views using synthetic demo data. The backdrop is a fixed gradient for reproducibility; the running app uses live macOS glass.
+
 ## Build and run
 
 Requires macOS 13 or later and a Swift 5.9+ toolchain (Xcode command-line tools). Local verification has been on Apple Silicon; Intel and the minimum macOS version have not been validated.
