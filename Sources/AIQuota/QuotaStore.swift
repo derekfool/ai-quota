@@ -140,14 +140,14 @@ struct RecentQuotaChange: Identifiable {
     func start() {
         refresh()
         timer = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.now = Date()
                 self.tick()
             }
         }
         if let timer { RunLoop.main.add(timer, forMode: .common) }
-        wakeObserver = NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { [weak self] _ in Task { @MainActor in self?.refresh() } }
+        wakeObserver = NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { [weak self] _ in Task { @MainActor [weak self] in self?.refresh() } }
     }
     func tick() {
         let time = now

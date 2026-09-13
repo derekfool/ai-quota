@@ -70,7 +70,7 @@ import QuotaCore
         statusItem.button?.title = store.menuTitle
         if UserDefaults.standard.object(forKey: "showFloating") == nil || UserDefaults.standard.bool(forKey: "showFloating") { panel.orderFrontRegardless() }
         screenObserver = NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main) { [weak self] _ in
-            Task { @MainActor in self?.resizePanel(); self?.fitPopover() }
+            Task { @MainActor [weak self] in self?.resizePanel(); self?.fitPopover() }
         }
         for viewport in [panelViewport, popoverViewport] {
             viewport.objectWillChange.sink { [weak self] _ in

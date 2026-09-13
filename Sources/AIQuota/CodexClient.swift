@@ -27,12 +27,12 @@ import QuotaCore
         let token = generation
         stdoutPipe.fileHandleForReading.readabilityHandler = { [weak self] handle in
             let data = handle.availableData
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 guard let self, self.generation == token else { return }
                 if data.isEmpty { self.stop() } else { self.receive(data) }
             }
         }
-        child.terminationHandler = { [weak self] _ in Task { @MainActor in if self?.generation == token { self?.stop() } } }
+        child.terminationHandler = { [weak self] _ in Task { @MainActor [weak self] in if self?.generation == token { self?.stop() } } }
         try child.run()
         process = child; input = stdinPipe.fileHandleForWriting
         _ = try await request("initialize", params: ["clientInfo": ["name": "ai_quota", "version": "0.1.0"]])
