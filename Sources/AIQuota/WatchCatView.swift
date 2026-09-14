@@ -43,15 +43,16 @@ struct WatchCatView: View {
                 let progress = reduceMotion ? 1 : amount
                 context.opacity = reduceMotion ? (exited == nil ? 1 : 0) : 1
                 context.clip(to: Path(roundedRect: CGRect(origin: .zero, size: size), cornerRadius: 18))
+                let overlap: CGFloat = kind == .surprised ? 26 : (kind == .catnip ? 18 : 8)
                 let front = kind.restsOnCard && exited == nil
-                var mask = Path(CGRect(x: 0, y: 0, width: size.width, height: front ? card.minY + 8 : card.maxY))
+                var mask = Path(CGRect(x: 0, y: 0, width: size.width, height: front ? card.minY + overlap : card.maxY))
                 if !front { mask.addRoundedRect(in: card, cornerSize: CGSize(width: 16, height: 16)) }
                 context.clip(to: mask, style: FillStyle(eoFill: true))
                 let rect: CGRect
                 if kind.restsOnCard {
-                    let width: CGFloat = kind == .angry ? 92 : 136
+                    let width: CGFloat = 136
                     let height = width * open.size.height / open.size.width
-                    rect = CGRect(x: card.minX + 2, y: card.minY + 8 - height + (1 - progress) * height, width: width, height: height)
+                    rect = CGRect(x: card.minX + 2, y: card.minY + overlap - height + (1 - progress) * height, width: width, height: height)
                 } else {
                     let travel = (1 - progress) * 240
                     context.translateBy(x: card.minX + 30 + kind.axis.x * travel,
@@ -92,14 +93,14 @@ struct WatchCatView: View {
             context.draw(Image(nsImage: image), in: rect)
             return
         }
-        if kind == .angry {
-            drawAngryEars(image, in: rect, twitch: twitch, context: context)
+        if kind == .angry || kind == .surprised {
+            drawUprightEars(image, in: rect, twitch: twitch, context: context)
             return
         }
         // Only the outer right ear bends. The cheek, ear root and paws retain
         // their original registration against the card, including during blinks.
         let ear = CGRect(x: rect.minX + rect.width * 0.85, y: rect.minY,
-                         width: rect.width * 0.15, height: rect.height * 0.87)
+                         width: rect.width * 0.15, height: rect.height * (kind == .catnip ? 0.80 : 0.87))
         var fixed = context
         var mask = Path(rect)
         mask.addRect(ear)
@@ -117,10 +118,10 @@ struct WatchCatView: View {
         }
     }
 
-    private func drawAngryEars(_ image: NSImage, in rect: CGRect, twitch: Double, context: GraphicsContext) {
+    private func drawUprightEars(_ image: NSImage, in rect: CGRect, twitch: Double, context: GraphicsContext) {
         // Bend the ear band inward continuously, with zero displacement at the
         // forehead boundary. The eyes, muzzle and card contact stay fixed.
-        let earHeight = rect.height * 0.40
+        let earHeight = rect.height * (kind == .surprised ? 0.32 : 0.40)
         var face = context
         face.clip(to: Path(CGRect(x: rect.minX, y: rect.minY + earHeight,
                                  width: rect.width, height: rect.height - earHeight)),

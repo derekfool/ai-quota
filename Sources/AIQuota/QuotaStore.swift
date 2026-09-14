@@ -26,6 +26,7 @@ struct RecentQuotaChange: Identifiable {
 
 @MainActor final class QuotaStore: ObservableObject {
     @Published private(set) var watchMascot = WatchMascot.sad
+    private var mascotShuffle = WatchMascotShuffle()
     @Published var language = AppLanguage.current {
         didSet {
             UserDefaults.standard.set(language.rawValue, forKey: "appLanguage")
@@ -177,7 +178,7 @@ struct RecentQuotaChange: Identifiable {
             codex.schedule.stopWatching(at: time); cursor.schedule.stopWatching(at: time)
             claude.schedule.stopWatching(at: time); gemini.schedule.stopWatching(at: time)
         } else {
-            watchMascot = WatchMascot.allCases.randomElement() ?? .sad
+            watchMascot = mascotShuffle.next()
             codex.schedule.startWatching(at: time, durationMinutes: watchDurationMinutes)
             cursor.schedule.startWatching(at: time, durationMinutes: watchDurationMinutes)
             claude.schedule.startWatching(at: time, durationMinutes: watchDurationMinutes)

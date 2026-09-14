@@ -1,10 +1,10 @@
 import Foundation
 
 public enum WatchMascot: Int, CaseIterable {
-    case sad, blank, lying, angry
+    case sad, blank, lying, angry, surprised, catnip
 
-    public var assetName: String { ["sad", "blank", "lying", "angry"][rawValue] }
-    public var restsOnCard: Bool { self == .lying || self == .angry }
+    public var assetName: String { ["sad", "blank", "lying", "angry", "surprised", "catnip"][rawValue] }
+    public var restsOnCard: Bool { self == .lying || self == .angry || self == .surprised || self == .catnip }
     public var exitDuration: Double { restsOnCard ? 0.28 : 0.22 }
     public var axis: (x: Double, y: Double) {
         let angle = -0.32
@@ -37,5 +37,17 @@ public enum WatchMascot: Int, CaseIterable {
     public func blink(at elapsed: Double) -> Double {
         let t = elapsed < 1.2 ? elapsed : 1.2 + (elapsed - 1.2).truncatingRemainder(dividingBy: 6.3)
         return [0.55, 0.88, 3.9, 6.3].map { max(0, 1 - abs(t - $0) / 0.12) }.max() ?? 0
+    }
+}
+
+/// A session-local bag: each pose appears once before the next shuffle.
+public struct WatchMascotShuffle {
+    private var remaining: [WatchMascot] = []
+
+    public init() {}
+
+    public mutating func next() -> WatchMascot {
+        if remaining.isEmpty { remaining = WatchMascot.allCases.shuffled() }
+        return remaining.removeLast()
     }
 }

@@ -1,0 +1,13 @@
+---
+description: Keep new Close Watch cats at the approved lounging-cat scale.
+alwaysApply: true
+---
+
+# Close Watch cat scale
+
+- For cat artwork, layout and animation changes, use the approved lying/table-resting cat as the size and visual-proportion reference.
+- Resting cats, including the angry cat, render at 136 pt wide with the artwork aspect ratio preserved. Do not add a smaller per-pose width to fit the header.
+- New artwork must use comparable tight transparent bounds, avoiding extra padding that makes its visible character smaller at the same width.
+- Allow ears or body to extend beyond the dashboard; clip overflow at its rounded outer boundary. Do not shrink the cat or enlarge the window to show the entire character.
+- Preserve the resting cat's 8 pt overlap with the first card and its behind-card exit occlusion. The user-approved surprised-cat exception overlaps by 26 pt (18 pt lower) to keep its eyes visible; its width remains 136 pt. The catnip cat overlaps by 18 pt to seat both paws despite their uneven baseline, also at 136 pt wide. Preserve existing standing poses unless explicitly asked to change them.
+- Check new poses beside the original lying cat at the same dashboard size. A pose-specific scale exception requires explicit user approval.
