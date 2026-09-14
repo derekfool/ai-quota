@@ -181,3 +181,11 @@ Language choices are direct items in More, beneath a disabled language heading. 
 Pinning updates panel floating status, window level, and Space membership together. Pinned panels use floating level and all-Spaces/full-screen auxiliary behavior. Unpinned panels use normal level and managed Space behavior, so they move with their desktop during Mission Control transitions instead of remaining over the animation. Explicit show/reopen can still bring the window forward; background quota updates do not reorder it.
 
 Deferring screen updates until flush did not resolve the user-observed black flash during pinned Space transitions and was removed. Live behind-window material transitions remain unresolved; do not claim the issue fixed from build checks.
+
+### Close Watch mascot
+
+Each new Close Watch session chooses uniformly among sad, blank, and lying cat poses. The shared store holds that choice for both dashboard surfaces; refreshes do not reselect it. The mascot is decorative, hidden from accessibility, ignores pointer input, and never contributes to layout measurement.
+
+The first provider card publishes its actual bounds. A Canvas overlay clips to the dashboard rounded outline and subtracts the first card for occlusion. Standing poses cover AI QUOTA and occupy the left gutter, using the approved nose-to-belly axis rotated by -0.32 radians for a 0.30-second entry and 0.22-second exit. The lying pose overlaps the card top by 8 points; on stop or expiry, it switches behind the card, waits 0.06 seconds, then retracts over 0.22 seconds. Eye-only blink frames preserve body registration. Reduce Motion shows a static pose and hides without translation or blinking. A cancelled exit task cannot hide a restarted session. Reordering temporarily hides the decoration to preserve the reorder controls; the chosen pose remains unchanged.
+
+No polling, sound, credential, persistence, or quota calculation behavior changes. Artwork is bundled locally without new network or package dependencies.

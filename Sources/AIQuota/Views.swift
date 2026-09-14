@@ -17,7 +17,7 @@ struct DashboardView: View {
                     Text("AI QUOTA").font(.system(size: 12, weight: .bold, design: .rounded)).tracking(2.5).foregroundStyle(accent)
 
                 }
-                Spacer()
+                Spacer().frame(height: 32)
                 Button(action: { store.toggleWatching() }) {
                     Text(store.watchSeconds > 0 ? L("◉ 密切关注 \(store.watchSeconds / 60):\(String(format: "%02d", store.watchSeconds % 60)) ×", "◉ Close Watch \(store.watchSeconds / 60):\(String(format: "%02d", store.watchSeconds % 60)) ×") : L("◎ 密切关注", "◎ Close Watch"))
                         .font(.system(size: 10, weight: .medium)).monospacedDigit()
@@ -45,6 +45,9 @@ struct DashboardView: View {
                         }.buttonStyle(.borderless)
                     }
                     providerCard(provider)
+                        .anchorPreference(key: FirstQuotaCardKey.self, value: .bounds) {
+                            store.providerOrder.first == provider ? $0 : nil
+                        }
                 }
             }
             if store.arrangingProviders {
@@ -139,6 +142,14 @@ struct DashboardView: View {
             }
         }
         .padding(12).frame(maxWidth: .infinity)
+        .overlayPreferenceValue(FirstQuotaCardKey.self) { anchor in
+            GeometryReader { geometry in
+                if let anchor {
+                    WatchCatView(watching: store.watchSeconds > 0 && !store.arrangingProviders,
+                                 selection: store.watchMascot, card: geometry[anchor])
+                }
+            }.allowsHitTesting(false)
+        }
         .preferredColorScheme(.dark)
         .environment(\.locale, store.language.locale)
     }
