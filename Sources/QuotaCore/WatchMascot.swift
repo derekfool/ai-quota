@@ -1,10 +1,11 @@
 import Foundation
 
 public enum WatchMascot: Int, CaseIterable {
-    case sad, blank, lying
+    case sad, blank, lying, angry
 
-    public var assetName: String { ["sad", "blank", "lying"][rawValue] }
-    public var exitDuration: Double { self == .lying ? 0.28 : 0.22 }
+    public var assetName: String { ["sad", "blank", "lying", "angry"][rawValue] }
+    public var restsOnCard: Bool { self == .lying || self == .angry }
+    public var exitDuration: Double { restsOnCard ? 0.28 : 0.22 }
     public var axis: (x: Double, y: Double) {
         let angle = -0.32
         let dx = -0.005, dy = 0.36
@@ -15,7 +16,7 @@ public enum WatchMascot: Int, CaseIterable {
 
     public func visibility(elapsed: Double, exiting: Bool) -> Double {
         if exiting {
-            let t = min(1, max(0, (elapsed - (self == .lying ? 0.06 : 0)) / 0.22))
+            let t = min(1, max(0, (elapsed - (restsOnCard ? 0.06 : 0)) / 0.22))
             return 1 - t * t * (3 - 2 * t)
         }
         let t = min(1, max(0, elapsed / 0.30))
@@ -24,7 +25,7 @@ public enum WatchMascot: Int, CaseIterable {
 
     /// Two brief ear flicks, separated by a long quiet interval after settling in.
     public func earTwitch(at elapsed: Double) -> Double {
-        guard self == .lying, elapsed >= 2.4 else { return 0 }
+        guard restsOnCard, elapsed >= 2.4 else { return 0 }
         let t = (elapsed - 2.4).truncatingRemainder(dividingBy: 8.7)
         func pulse(_ start: Double, _ duration: Double) -> Double {
             guard t >= start, t <= start + duration else { return 0 }

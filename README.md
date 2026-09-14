@@ -19,7 +19,7 @@ This is an independent project, not affiliated with or endorsed by the providers
   <img src="docs/screenshots/close-watch-cat-en.png" width="360" alt="Close Watch with the cat resting on the first quota card">
 </p>
 
-Close Watch randomly brings out one of three cats. The lounging cat rests on the first card, blinks, and occasionally twitches its ear.
+Close Watch randomly brings out one of four cats. The lounging cat rests on the first card, blinks, and occasionally twitches its ear.
 
 Rendered from the app’s SwiftUI views using synthetic demo data. The backdrop is a fixed gradient for reproducibility; the running app uses live macOS glass.
 

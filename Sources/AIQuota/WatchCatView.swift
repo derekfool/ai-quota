@@ -43,13 +43,13 @@ struct WatchCatView: View {
                 let progress = reduceMotion ? 1 : amount
                 context.opacity = reduceMotion ? (exited == nil ? 1 : 0) : 1
                 context.clip(to: Path(roundedRect: CGRect(origin: .zero, size: size), cornerRadius: 18))
-                let front = kind == .lying && exited == nil
+                let front = kind.restsOnCard && exited == nil
                 var mask = Path(CGRect(x: 0, y: 0, width: size.width, height: front ? card.minY + 8 : card.maxY))
                 if !front { mask.addRoundedRect(in: card, cornerSize: CGSize(width: 16, height: 16)) }
                 context.clip(to: mask, style: FillStyle(eoFill: true))
                 let rect: CGRect
-                if kind == .lying {
-                    let width: CGFloat = 136
+                if kind.restsOnCard {
+                    let width: CGFloat = kind == .angry ? 92 : 136
                     let height = width * open.size.height / open.size.width
                     rect = CGRect(x: card.minX + 2, y: card.minY + 8 - height + (1 - progress) * height, width: width, height: height)
                 } else {
@@ -92,6 +92,10 @@ struct WatchCatView: View {
             context.draw(Image(nsImage: image), in: rect)
             return
         }
+        if kind == .angry {
+            drawAngryEars(image, in: rect, twitch: twitch, context: context)
+            return
+        }
         // Only the outer right ear bends. The cheek, ear root and paws retain
         // their original registration against the card, including during blinks.
         let ear = CGRect(x: rect.minX + rect.width * 0.85, y: rect.minY,
@@ -110,6 +114,29 @@ struct WatchCatView: View {
                                       width: ear.width / Double(slices), height: ear.height)),
                        style: FillStyle(antialiased: false))
             strip.draw(Image(nsImage: image), in: rect.offsetBy(dx: 0, dy: -rect.height * 0.025 * twitch * bend))
+        }
+    }
+
+    private func drawAngryEars(_ image: NSImage, in rect: CGRect, twitch: Double, context: GraphicsContext) {
+        // Bend the ear band inward continuously, with zero displacement at the
+        // forehead boundary. The eyes, muzzle and card contact stay fixed.
+        let earHeight = rect.height * 0.40
+        var face = context
+        face.clip(to: Path(CGRect(x: rect.minX, y: rect.minY + earHeight,
+                                 width: rect.width, height: rect.height - earHeight)),
+                  style: FillStyle(antialiased: false))
+        face.draw(Image(nsImage: image), in: rect)
+        let slices = 40
+        for index in 0..<slices {
+            let fraction = Double(index) / Double(slices)
+            let weight = pow(1 - fraction, 2)
+            let inset = rect.width * 0.18 * twitch * weight
+            var row = context
+            row.clip(to: Path(CGRect(x: rect.minX, y: rect.minY + earHeight * fraction,
+                                    width: rect.width, height: earHeight / Double(slices))),
+                     style: FillStyle(antialiased: false))
+            row.draw(Image(nsImage: image), in: CGRect(x: rect.minX + inset, y: rect.minY,
+                                                      width: rect.width - 2 * inset, height: rect.height))
         }
     }
 

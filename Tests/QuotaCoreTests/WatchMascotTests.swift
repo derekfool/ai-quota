@@ -13,6 +13,15 @@ final class WatchMascotTests: XCTestCase {
         XCTAssertEqual(WatchMascot.lying.earTwitch(at: 11.24), 1, accuracy: 0.00001)
     }
 
+    func testAngryPoseJoinsRandomPoolAndUsesCardOcclusion() {
+        XCTAssertEqual(Set(WatchMascot.allCases.map(\.assetName)), ["sad", "blank", "lying", "angry"])
+        XCTAssertTrue(WatchMascot.angry.restsOnCard)
+        XCTAssertFalse(WatchMascot.sad.restsOnCard)
+        XCTAssertEqual(WatchMascot.angry.visibility(elapsed: 0.05, exiting: true), 1)
+        XCTAssertEqual(WatchMascot.angry.visibility(elapsed: 0.28, exiting: true), 0, accuracy: 0.00001)
+        XCTAssertEqual(WatchMascot.angry.earTwitch(at: 2.54), 1, accuracy: 0.00001)
+    }
+
     func testLyingCatMovesOnlyAfterOcclusionDelay() {
         XCTAssertEqual(WatchMascot.lying.visibility(elapsed: 0.05, exiting: true), 1)
         XCTAssertLessThan(WatchMascot.lying.visibility(elapsed: 0.12, exiting: true), 1)
