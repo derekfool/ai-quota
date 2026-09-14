@@ -2,6 +2,17 @@ import XCTest
 @testable import QuotaCore
 
 final class WatchMascotTests: XCTestCase {
+    func testEarFlickIsLyingOnlyAndHasQuietIntervals() {
+        for pose in [WatchMascot.sad, .blank] {
+            XCTAssertEqual(pose.earTwitch(at: 2.54), 0)
+        }
+        XCTAssertEqual(WatchMascot.lying.earTwitch(at: 0.3), 0)
+        XCTAssertEqual(WatchMascot.lying.earTwitch(at: 2.54), 1, accuracy: 0.00001)
+        XCTAssertEqual(WatchMascot.lying.earTwitch(at: 2.9), 0.6, accuracy: 0.00001)
+        XCTAssertEqual(WatchMascot.lying.earTwitch(at: 6), 0)
+        XCTAssertEqual(WatchMascot.lying.earTwitch(at: 11.24), 1, accuracy: 0.00001)
+    }
+
     func testLyingCatMovesOnlyAfterOcclusionDelay() {
         XCTAssertEqual(WatchMascot.lying.visibility(elapsed: 0.05, exiting: true), 1)
         XCTAssertLessThan(WatchMascot.lying.visibility(elapsed: 0.12, exiting: true), 1)

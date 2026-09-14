@@ -59,10 +59,12 @@ struct WatchCatView: View {
                     context.rotate(by: .radians(-0.32))
                     rect = CGRect(x: -90, y: -90, width: 180, height: 180)
                 }
-                context.draw(Image(nsImage: open), in: rect)
+                let age = timeline.date.timeIntervalSince(entered)
+                let twitch = reduceMotion || exited != nil ? 0 : kind.earTwitch(at: age)
+                drawFrame(open, in: rect, twitch: twitch, context: context)
                 if !reduceMotion {
                     context.opacity = kind.blink(at: timeline.date.timeIntervalSince(entered))
-                    context.draw(Image(nsImage: closed), in: rect)
+                    drawFrame(closed, in: rect, twitch: twitch, context: context)
                 }
             }
         }
@@ -84,4 +86,31 @@ struct WatchCatView: View {
             }
         }
     }
+
+    private func drawFrame(_ image: NSImage, in rect: CGRect, twitch: Double, context: GraphicsContext) {
+        guard twitch > 0 else {
+            context.draw(Image(nsImage: image), in: rect)
+            return
+        }
+        // Only the outer right ear bends. The cheek, ear root and paws retain
+        // their original registration against the card, including during blinks.
+        let ear = CGRect(x: rect.minX + rect.width * 0.85, y: rect.minY,
+                         width: rect.width * 0.15, height: rect.height * 0.87)
+        var fixed = context
+        var mask = Path(rect)
+        mask.addRect(ear)
+        fixed.clip(to: mask, style: FillStyle(eoFill: true))
+        fixed.draw(Image(nsImage: image), in: rect)
+        let slices = 24
+        for index in 0..<slices {
+            let fraction = Double(index) / Double(slices)
+            let bend = fraction * fraction * (3 - 2 * fraction)
+            var strip = context
+            strip.clip(to: Path(CGRect(x: ear.minX + ear.width * fraction, y: ear.minY,
+                                      width: ear.width / Double(slices), height: ear.height)),
+                       style: FillStyle(antialiased: false))
+            strip.draw(Image(nsImage: image), in: rect.offsetBy(dx: 0, dy: -rect.height * 0.025 * twitch * bend))
+        }
+    }
+
 }
